@@ -11,6 +11,20 @@ DIRECTORY="$(dirname "$(realpath $0)")"
 ACTION="$1"
 ARGUMENT="$2"
 
+if [[ "$ACTION" == "list" ]]; then
+  while read -r repo
+  do
+    REPONAME="$(echo "$repo" | cut -d "=" -f 1)"
+    REPOURL="$(echo "$repo" | cut -d "=" -f 2)"
+    echo "REPO $REPONAME"
+    while read -r library
+    do
+      LIBNAME="$(echo "$library" | cut -d "=" -f 1)"
+      echo "LIBRARY $LIBNAME"
+    done <<< "$(curl -s "$REPOURL")"
+  done < "$DIRECTORY/repos"
+fi
+
 if [[ "$ACTION" == "get" ]]; then
   while read -r repo
   do
@@ -32,7 +46,7 @@ if [[ "$ACTION" == "get" ]]; then
         echo "Downloaded to 'libs/$REPONAME/$LIBNAME.lua'"
         exit
       fi
-    done <<< "$(curl "$REPOURL")"
+    done <<< "$(curl -s "$REPOURL")"
   done < "$DIRECTORY/repos"
 fi
 
