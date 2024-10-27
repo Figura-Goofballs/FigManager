@@ -6,10 +6,18 @@ then
   exit
 fi
 
+libpath="libs"
 DIRECTORY="$(dirname "$(realpath $0)")"
 
 ACTION="$1"
 ARGUMENT="$2"
+
+while read -r opt
+do
+  OPTNAME="$(echo "$opt" | cut -d "=" -f 1)"
+  OPTVAL="$(echo "$opt" | cut -d "=" -f 2)"
+  env "$OPTNAME=$OPTVAL" &> /dev/null
+done < "$DIRECTORY/config.properties"
 
 if [[ "$ACTION" == "list" ]]; then
   while read -r repo
@@ -42,8 +50,8 @@ if [[ "$ACTION" == "get" ]]; then
       if [[ "$ARGUMENT" == "$LIBNAME" ]]; then
         echo "Found! Downloading now."
         mkdir -p "libs/$REPONAME"
-        curl "$LIBURL" > "libs/$REPONAME/$LIBNAME.lua"
-        echo "Downloaded to 'libs/$REPONAME/$LIBNAME.lua'"
+        curl "$LIBURL" > "$libpath/$REPONAME/$LIBNAME.lua"
+        echo "Downloaded to '$libpath/$REPONAME/$LIBNAME.lua'"
         exit
       fi
     done <<< "$(curl -s "$REPOURL")"
