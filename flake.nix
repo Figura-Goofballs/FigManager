@@ -6,7 +6,7 @@
 				export PATH=${pkgs.lib.escapeShellArg (pkgs.lib.makeBinPath [
 					pkgs.bash
 				])}
-				exec ${./src}/manager.sh
+				exec bash ${./src}/manager.sh
 			'';
 		});
 	};
