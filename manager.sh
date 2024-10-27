@@ -22,7 +22,7 @@ if [[ "$ACTION" == "list" ]]; then
       LIBNAME="$(echo "$library" | cut -d "=" -f 1)"
       echo "LIBRARY $LIBNAME"
     done <<< "$(curl -s "$REPOURL")"
-  done < "$DIRECTORY/repos"
+  done < "$DIRECTORY/repos.properties"
 fi
 
 if [[ "$ACTION" == "get" ]]; then
@@ -47,6 +47,6 @@ if [[ "$ACTION" == "get" ]]; then
         exit
       fi
     done <<< "$(curl -s "$REPOURL")"
-  done < "$DIRECTORY/repos"
+  done < "$DIRECTORY/repos.properties"
 fi
 
