@@ -7,7 +7,7 @@
 					pkgs.bash
 					pkgs.coreutils-full
 				])}
-				echo "$0" "$@"
+				assetdir=${./asset}
 				. ${./src}/manager.sh
 			'';
 		}) inputs.nixpkgs.legacyPackages;
