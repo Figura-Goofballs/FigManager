@@ -44,7 +44,7 @@ if [[ "$ACTION" == "get" ]]; then
 
       if [[ "$ARGUMENT" == "$LIBNAME" ]]; then
         echo "Found! Downloading now."
-        mkdir -p "libs/$REPONAME"
+        mkdir -p "$libpath/$REPONAME"
         curl "$LIBURL" > "$libpath/$REPONAME/$LIBNAME.lua"
         echo "Downloaded to '$libpath/$REPONAME/$LIBNAME.lua'"
         exit
