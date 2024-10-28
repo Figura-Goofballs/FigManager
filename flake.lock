@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "coreutils": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1729020927,
+        "narHash": "sha256-uGmVjue3uzoiYCeQHH9zhGlOg6+xOvek1Fu7OkVYUb0=",
+        "owner": "themackabu",
+        "repo": "coreutils",
+        "rev": "464d2d658ad1e3c65b2da7890f692d9abf1a79aa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "themackabu",
+        "repo": "coreutils",
+        "type": "github"
+      }
+    },
     "fenix": {
       "inputs": {
         "nixpkgs": "nixpkgs",
@@ -102,6 +118,7 @@
     },
     "root": {
       "inputs": {
+        "coreutils": "coreutils",
         "fia": "fia"
       }
     },

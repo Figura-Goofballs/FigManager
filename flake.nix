@@ -5,8 +5,10 @@
 			default = pkgs.writers.writeBashBin "fig-manager" ''
 				export PATH=${pkgs.lib.escapeShellArg (pkgs.lib.makeBinPath [
 					pkgs.bash
+					pkgs.coreutils-full
 				])}
-				exec bash ${./src}/manager.sh
+				echo "$0" "$@"
+				. ${./src}/manager.sh
 			'';
 		});
 	};
