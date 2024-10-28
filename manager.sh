@@ -13,7 +13,7 @@ ACTION="$1"
 ARGUMENT="$2"
 
 source "$DIRECTORY/config.properties"
-mkdir -p "$DIRECTORY/.figmancache"
+mkdir -p "$HOME/.cache/figmanager"
 
 if [[ "$ACTION" == "list" ]]; then
   while read -r repo
@@ -49,7 +49,7 @@ if [[ "$ACTION" == "get" ]]; then
         echo "Downloaded to '$libpath/$REPONAME/$LIBNAME.lua'"
         exit
       fi
-    done < "$DIRECTORY/.figmancache/$REPONAME"
+    done < "$HOME/.cache/figmanager/$REPONAME"
   done < "$DIRECTORY/repos.properties"
 fi
 
@@ -60,14 +60,14 @@ if [[ "$ACTION" == "update" ]]; then
     REPOURL="$(echo "$repo" | cut -d "=" -f 2)"
     echo "REPO $REPONAME"
     echo "URL $REPOURL"
-    curl "$REPOURL" > "$DIRECTORY/.figmancache/$REPONAME"
+    curl "$REPOURL" > "$HOME/.cache/figmanager/$REPONAME"
   done < "$DIRECTORY/repos.properties"
 fi
 
 if [[ "$ACTION" == "upgrade" ]]; then
   while read -r file
   do
-    "$0" get "$(basename "$file" .lua)"
+    "$0" get "$(basename $file .lua)"
   done <<< "$(find "$libpath" -type f)"
 fi
 
