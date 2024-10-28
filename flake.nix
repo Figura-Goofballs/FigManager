@@ -1,7 +1,7 @@
 {
-	inputs.fia.url = github:poollovernathan/fia;
+	inputs.nixpkgs.url = github:nixos/nixpkgs;
 	outputs = inputs: rec {
-		packages = inputs.fia.lib.perSystem (pkgs: {
+		packages = inputs.nixpkgs.lib.mapAttrs (system: pkgs: {
 			default = pkgs.writers.writeBashBin "figman" ''
 				export PATH=${pkgs.lib.escapeShellArg (pkgs.lib.makeBinPath [
 					pkgs.bash
@@ -10,6 +10,6 @@
 				echo "$0" "$@"
 				. ${./src}/manager.sh
 			'';
-		});
+		}) inputs.nixpkgs.legacyPackages;
 	};
 }
