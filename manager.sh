@@ -59,7 +59,7 @@ if [[ "$ACTION" == "update" ]]; then
     REPONAME="$(echo "$repo" | cut -d "=" -f 1)"
     REPOURL="$(echo "$repo" | cut -d "=" -f 2)"
     echo "REPO $REPONAME"
-    echo "url $REPOURL"
+    echo "URL $REPOURL"
     curl "$REPOURL" > "$DIRECTORY/.figmancache/$REPONAME"
   done < "$DIRECTORY/repos.properties"
 fi
