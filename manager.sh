@@ -7,17 +7,13 @@ then
 fi
 
 libpath="libs"
-DIRECTORY="$(dirname "$(realpath $0)")"
+DIRECTORY="$(dirname "$(realpath "$0")")"
 
 ACTION="$1"
 ARGUMENT="$2"
 
-while read -r opt
-do
-  OPTNAME="$(echo "$opt" | cut -d "=" -f 1)"
-  OPTVAL="$(echo "$opt" | cut -d "=" -f 2)"
-  env "$OPTNAME=$OPTVAL" &> /dev/null
-done < "$DIRECTORY/config.properties"
+source "$DIRECTORY/config.properties"
+mkdir -p "$DIRECTORY/.figmancache"
 
 if [[ "$ACTION" == "list" ]]; then
   while read -r repo
@@ -39,7 +35,6 @@ if [[ "$ACTION" == "get" ]]; then
     REPONAME="$(echo "$repo" | cut -d "=" -f 1)"
     REPOURL="$(echo "$repo" | cut -d "=" -f 2)"
     echo "Checking Repo $REPONAME"
-    echo "URL $REPOURL"
     while read -r library
     do
       LIBNAME="$(echo "$library" | cut -d "=" -f 1)"
@@ -54,7 +49,25 @@ if [[ "$ACTION" == "get" ]]; then
         echo "Downloaded to '$libpath/$REPONAME/$LIBNAME.lua'"
         exit
       fi
-    done <<< "$(curl -s "$REPOURL")"
+    done < "$DIRECTORY/.figmancache/$REPONAME"
   done < "$DIRECTORY/repos.properties"
+fi
+
+if [[ "$ACTION" == "update" ]]; then
+  while read -r repo
+  do 
+    REPONAME="$(echo "$repo" | cut -d "=" -f 1)"
+    REPOURL="$(echo "$repo" | cut -d "=" -f 2)"
+    echo "REPO $REPONAME"
+    echo "url $REPOURL"
+    curl "$REPOURL" > "$DIRECTORY/.figmancache/$REPONAME"
+  done < "$DIRECTORY/repos.properties"
+fi
+
+if [[ "$ACTION" == "upgrade" ]]; then
+  while read -r file
+  do
+    "$0" get "$(basename "$file" .lua)"
+  done <<< "$(find "$libpath" -type f)"
 fi
 
