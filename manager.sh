@@ -13,9 +13,7 @@ ACTION="$1"
 ARGUMENT="$2"
 
 source "$DIRECTORY/config.properties"
-
-env
-echo "$libpath"
+mkdir -p "$HOME/.cache/figmanager"
 
 if [[ "$ACTION" == "list" ]]; then
   while read -r repo
@@ -37,7 +35,6 @@ if [[ "$ACTION" == "get" ]]; then
     REPONAME="$(echo "$repo" | cut -d "=" -f 1)"
     REPOURL="$(echo "$repo" | cut -d "=" -f 2)"
     echo "Checking Repo $REPONAME"
-    echo "URL $REPOURL"
     while read -r library
     do
       LIBNAME="$(echo "$library" | cut -d "=" -f 1)"
@@ -52,7 +49,25 @@ if [[ "$ACTION" == "get" ]]; then
         echo "Downloaded to '$libpath/$REPONAME/$LIBNAME.lua'"
         exit
       fi
-    done <<< "$(curl -s "$REPOURL")"
+    done < "$HOME/.cache/figmanager/$REPONAME"
   done < "$DIRECTORY/repos.properties"
+fi
+
+if [[ "$ACTION" == "update" ]]; then
+  while read -r repo
+  do 
+    REPONAME="$(echo "$repo" | cut -d "=" -f 1)"
+    REPOURL="$(echo "$repo" | cut -d "=" -f 2)"
+    echo "REPO $REPONAME"
+    echo "URL $REPOURL"
+    curl "$REPOURL" > "$HOME/.cache/figmanager/$REPONAME"
+  done < "$DIRECTORY/repos.properties"
+fi
+
+if [[ "$ACTION" == "upgrade" ]]; then
+  while read -r file
+  do
+    "$0" get "$(basename $file .lua)"
+  done <<< "$(find "$libpath" -type f)"
 fi
 
