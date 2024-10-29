@@ -1,15 +1,22 @@
 {
-	inputs.nixpkgs.url = github:nixos/nixpkgs;
-	outputs = inputs: rec {
-		packages = inputs.nixpkgs.lib.mapAttrs (system: pkgs: {
-			default = pkgs.writers.writeBashBin "figman" ''
-				export PATH=${pkgs.lib.escapeShellArg (pkgs.lib.makeBinPath [
-					pkgs.bash
-					pkgs.coreutils-full
-				])}
-				assetdir=${./asset}
-				. ${./src}/manager.sh
-			'';
-		}) inputs.nixpkgs.legacyPackages;
-	};
+	inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+	outputs = {nixpkgs, flake-utils, ...}: flake-utils.lib.eachDefaultSystem (system:
+    let
+      pkgs = import nixpkgs{inherit system;};
+    in {
+      devShells.default = pkgs.mkShell {
+        buildInputs = with pkgs.lua54Packages; [
+          lua
+          dkjson # JSON
+          luasocket # HTTP
+          luasec
+          luafilesystem # FS
+        ];
+      };
+	  }
+  );
 }
