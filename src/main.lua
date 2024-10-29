@@ -12,6 +12,10 @@ local repos = {
 }
 local reposdecoded = {}
 
+local config = {
+  libdir = "libs"
+}
+
 local homedir = os.getenv("HOME")
 if not homedir or homedir == "" then
   homedir = os.getenv("HomeDrive") .. os.getenv("HomePath")
@@ -24,7 +28,15 @@ lfs.mkdir(cachedir:gsub("figmanager/$", ""))
 lfs.mkdir(configdir:gsub("figmanager/$", ""))
 lfs.mkdir(cachedir)
 lfs.mkdir(configdir)
-lfs.mkdir(lfs.currentdir():gsub("\\", "/"):gsub("/$", "") .. "/libs")
+
+if not utils.exists(configdir .. "config.json") then
+  local file = assert(io.open(configdir .. "config.json", "w+"))
+  file:write(dkjson.encode(repos))
+  file:close()
+end
+
+config = dkjson.decode(utils.readfile(configdir .. "config.json"))
+lfs.mkdir(lfs.currentdir():gsub("\\", "/"):gsub("/$", "") .. "/" .. config.libdir .. "/")
 
 if not utils.exists(pkgfilepath) then
   local file = assert(io.open(pkgfilepath, "w+"))
@@ -32,14 +44,14 @@ if not utils.exists(pkgfilepath) then
   file:close()
 end
 
-if not utils.exists(configdir .. "repos.json") then
-  local file = assert(io.open(configdir .. "repos.json", "w+"))
+if not utils.exists(cachedir .. "repos.json") then
+  local file = assert(io.open(cachedir .. "repos.json", "w+"))
   file:write(dkjson.encode(repos))
   file:close()
 end
 
 if action ~= "update" and not (opts:match("u")) then
-  repos = dkjson.decode(utils.readfile(configdir .. "repos.json"))
+  repos = dkjson.decode(utils.readfile(cachedir .. "repos.json"))
 end
 
 local iter = 1
@@ -64,7 +76,7 @@ pkgfile:close()
 local function updatecache()
   print("Updating cache...")
 
-  local file = assert(io.open(configdir .. "repos.json", "w+"))
+  local file = assert(io.open(cachedir .. "repos.json", "w+"))
   file:write(dkjson.encode(repos))
   file:close()
 
@@ -97,7 +109,7 @@ local function get(lib, ext, nodeps, pkgtype)
   pkgtype = pkgtype or "PACKAGE"
 
   for repo, v in pairs(reposdecoded) do
-    local repodir = lfs.currentdir():gsub("\\", "/"):gsub("/$", "") .. "/libs/" .. repo
+    local repodir = lfs.currentdir():gsub("\\", "/"):gsub("/$", "") .. "/" .. config.libdir .. "/" .. repo
     lfs.mkdir(repodir)
 
     for k, w in pairs(v) do
@@ -177,7 +189,7 @@ local function remove(lib, ext)
             remove(k)
           end
         else
-          assert(os.remove(lfs.currentdir():gsub("\\", "/"):gsub("/$", "") .. "/libs/" .. repo .. "/" .. lib .. (ext or ".lua")))
+          assert(os.remove(lfs.currentdir():gsub("\\", "/"):gsub("/$", "") .. "/" .. config.libdir .. "/" .. repo .. "/" .. lib .. (ext or ".lua")))
         end
         pkgtbl[lib] = nil
       end
