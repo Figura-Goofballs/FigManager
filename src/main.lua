@@ -51,10 +51,6 @@ if not utils.exists(cachedir .. "repos.json") then
   file:close()
 end
 
-if action ~= "update" and not (opts:match("u")) then
-  repos = dkjson.decode(utils.readfile(cachedir .. "repos.json"))
-end
-
 local iter = 1
 for _, v in pairs(arg) do
   if v:match("^%-[^.]") then
@@ -68,6 +64,10 @@ for _, v in pairs(arg) do
     table.insert(args, v)
     iter = iter + 1
   end
+end
+
+if action ~= "update" and not (opts:match("u")) then
+  repos = dkjson.decode(utils.readfile(cachedir .. "repos.json"))
 end
 
 local pkgfile = assert(io.open(pkgfilepath, "r"))
