@@ -8,7 +8,8 @@ local action = ""
 local args = {}
 
 local repos = {
-  TheKillerBunny = "https://codeberg.org/TheBunnyMan123/FigManagerRepo/raw/branch/main/repo"
+  TheKillerBunny = "https://codeberg.org/TheBunnyMan123/FigManagerRepo/raw/branch/main/repo";
+  GNamimates = "https://raw.githubusercontent.com/lua-gods/GNs-Avatar-3/refs/heads/GNUI-Simplification/libraries/figmanifest.json";
 }
 local reposdecoded = {}
 
