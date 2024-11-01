@@ -41,6 +41,15 @@
         };
       };
 
+      checks = {
+        prettier = pkgs.runCommand "prettier-check" {
+          buildInputs = [pkgs.nodePackages.prettier];
+        } ''
+          prettier --check ${./.}
+          touch $out
+        '';
+      };
+
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs.lua54Packages; [
           lua
