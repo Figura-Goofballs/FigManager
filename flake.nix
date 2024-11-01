@@ -1,10 +1,12 @@
+# vim: ts=2 sts=2 sw=2 et fdm=indent ft=nix
+
 {
-	inputs = {
+  inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-	outputs = {nixpkgs, flake-utils, ...}: flake-utils.lib.eachDefaultSystem (
+  outputs = {nixpkgs, flake-utils, ...}: flake-utils.lib.eachDefaultSystem (
     system: let
       pkgs = nixpkgs.legacyPackages.${system};
     in rec {
@@ -29,7 +31,7 @@
           installPhase = ''
             mkdir -p $out/bin
             cp "${pkgs.writeShellScript "figman.sh" ''
-							lua=$(dirname $(dirname $(realpath $(command -v lua))))
+              lua=$(dirname $(dirname $(realpath $(command -v lua))))
               LUA_PATH="${src}/?.lua;$lua/share/lua/5.4/?.lua" LUA_CPATH="$lua/lib/lua/5.4/?.so" lua ${src}/main.lua "$@"
             ''}" $out/bin/figman
 
@@ -48,6 +50,6 @@
           luafilesystem # FS
         ];
       };
-	  }
+    }
   );
 }
