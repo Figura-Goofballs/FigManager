@@ -10,7 +10,8 @@
     in rec {
       packages = {
         default = pkgs.stdenv.mkDerivation rec {
-          name = "figman";
+          pname = "figman";
+          version = "1";
           src = ./src;
 
           buildInputs = with pkgs; [
