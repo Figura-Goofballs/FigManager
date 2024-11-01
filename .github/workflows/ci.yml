@@ -28,4 +28,4 @@ jobs:
             extra-substituters = http://cache.pool.net.eu.org
             extra-trusted-public-keys = cache.pool.net.eu.org:7tDwL5h6E8zCvdjIb3gDf7ScjLTKjOnLvsbqQJa9TM8=
       - uses: actions/checkout@v4
-      - run: nix flake check --store ssh-ng://ci@nathanlaptopv.axolotl-snake.ts.net/
+      - run: nix flake check --store ssh-ng://ci@nathanlaptopv.axolotl-snake.ts.net
