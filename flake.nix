@@ -29,7 +29,8 @@
           installPhase = ''
             mkdir -p $out/bin
             cp "${pkgs.writeShellScript "figman.sh" ''
-              LUA_PATH="${src}/?.lua;$LUA_PATH" lua ${src}/main.lua "$@"
+							lua=$(dirname $(dirname $(realpath $(command -v lua))))
+              LUA_PATH="${src}/?.lua;$lua/share/lua/5.4/?.lua" LUA_CPATH="$lua/lib/lua/5.4/?.so" lua ${src}/main.lua "$@"
             ''}" $out/bin/figman
 
             wrapProgram $out/bin/figman \
