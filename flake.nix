@@ -37,11 +37,6 @@
         };
       };
 
-      apps = rec {
-        figman = flake-utils.lib.mkApp { drv = packages.default; };
-        default = figman;
-      };
-
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs.lua54Packages; [
           lua
