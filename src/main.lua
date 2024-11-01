@@ -32,7 +32,7 @@ lfs.mkdir(configdir)
 
 if not utils.exists(configdir .. "config.json") then
   local file = assert(io.open(configdir .. "config.json", "w+"))
-  file:write(dkjson.encode(repos))
+  file:write(dkjson.encode(config))
   file:close()
 end
 
