@@ -27,7 +27,9 @@ jobs:
         with:
           extra_nix_config: |
             extra-substituters = http://cache.pool.net.eu.org
+            remote-builders = ci@nathanlaptopv.axolotl-snake.ts.ne
             extra-trusted-public-keys = cache.pool.net.eu.org:7tDwL5h6E8zCvdjIb3gDf7ScjLTKjOnLvsbqQJa9TM8=
       - uses: actions/checkout@v4
       - run: nix run nixpkgs#tree
-      - run: nix flake check --store ssh-ng://ci@nathanlaptopv.axolotl-snake.ts.net
+      - run: nix flake check --max-jobs 0
+      - run: nix copy --to ssh-ng://ci@nathanlaptopv.axolotl-snake.ts.net
