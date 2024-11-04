@@ -22,6 +22,7 @@ jobs:
             echo "-----END OPENSSH PRIVATE KEY-----"
           ) > ~/.ssh/id_ed25519
           echo "nathanlaptopv.axolotl-snake.ts.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILEMN/0ksFxAEQlwRmTc6+kb1+S4Su7W3JljT+rcIiIV" >> ~/.ssh/known_hosts
+      - run: chmod 400 ~/.ssh/id_ed25519
       - uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: |
