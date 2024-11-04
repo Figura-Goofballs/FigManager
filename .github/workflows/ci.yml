@@ -26,10 +26,9 @@ jobs:
       - uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: |
-            extra-substituters = http://cache.pool.net.eu.org
-            remote-builders = ci@nathanlaptopv.axolotl-snake.ts.ne
+            extra-trusted-substituters = http://cache.pool.net.eu.org?priority=50
             extra-trusted-public-keys = cache.pool.net.eu.org:7tDwL5h6E8zCvdjIb3gDf7ScjLTKjOnLvsbqQJa9TM8=
       - uses: actions/checkout@v4
-      - run: nix run nixpkgs#tree
-      - run: nix flake check --max-jobs 0
+      - run: nix build --builders ci@nathanlaptopv.axolotl-snake.ts.net --max-jobs 0
+      - run: nix flake check --builders ci@nathanlaptopv.axolotl-snake.ts.net --max-jobs 0
       - run: nix copy --to ssh-ng://ci@nathanlaptopv.axolotl-snake.ts.net
