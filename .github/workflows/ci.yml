@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: kyfB6Hu8u211CNTRL
+          oauth-secret: ${{ secrets.TAILSCALE_CI_SECRET }}
+          tags: tag:ci
+      - run: |
+          mkdir ~/.ssh
+          (
+            echo "-----BEGIN OPENSSH PRIVATE KEY-----"
+            echo "${{ secrets.CI_SSH_KEY }}"
+            echo "-----END OPENSSH PRIVATE KEY-----"
+          ) > ~/.ssh/id_ed25519
+          echo "nathanlaptopv.axolotl-snake.ts.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILEMN/0ksFxAEQlwRmTc6+kb1+S4Su7W3JljT+rcIiIV" >> ~/.ssh/known_hosts
+      - run: chmod 400 ~/.ssh/id_ed25519
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            extra-trusted-substituters = http://cache.pool.net.eu.org?priority=50
+            extra-trusted-public-keys = cache.pool.net.eu.org:7tDwL5h6E8zCvdjIb3gDf7ScjLTKjOnLvsbqQJa9TM8=
+      - uses: actions/checkout@v4
+      - run: nix build --builders ci@nathanlaptopv.axolotl-snake.ts.net --max-jobs 0
+      - run: nix flake check --builders ci@nathanlaptopv.axolotl-snake.ts.net --max-jobs 0
+      - run: nix copy --to ssh-ng://ci@nathanlaptopv.axolotl-snake.ts.net
