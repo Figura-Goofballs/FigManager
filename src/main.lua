@@ -10,6 +10,7 @@ local args = {}
 local repos = {
   TheKillerBunny = "https://codeberg.org/TheBunnyMan123/FigManagerRepo/raw/branch/main/repo";
   GNamimates = "https://raw.githubusercontent.com/lua-gods/GNs-Avatar-3/refs/heads/main/lib/figmanifest.json";
+  Bitslayn = "https://raw.githubusercontent.com/Bitslayn/FOX-s-Figura-APIs/refs/heads/main/figman.json";
 }
 local reposdecoded = {}
 
